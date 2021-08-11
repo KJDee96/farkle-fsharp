@@ -31,9 +31,9 @@ module Program =
         | None ->
             printfn "%s" errorInvalidInputString
             diceInput state
-        | Some(_) ->
+        | Some _ ->
             updateDice dice.Value state
-        
+    
     let rec settingsMenu state = 
         printfn "%s" settingsMenuString
         match getInput () with
@@ -49,8 +49,31 @@ module Program =
         | _ ->
             printfn "%s" errorInvalidInputString
             settingsMenu state
+    
+    let rec addPlayers (amount: int) (tally: int) (state: State) =
+        match amount with
+        | amount when amount = tally ->
+            state
+        |_ ->
+            printfn "%s" enterPlayerNameString
+            let name = Console.ReadLine ()
+            updatePlayerName name Player.Default
+            |> addPlayer <| state
+            |> addPlayers amount (tally + 1)
             
-    let playFarkle (state: State) : State = state
+    let rec getNumPlayers (state: State) =
+        printfn "%s" amountOfPlayersString
+        let _, input = getInput ()
+        match input with
+        | input when input >= 2 ->
+            addPlayers input 0 state
+        | _ ->
+            printfn "%s" errorPlayerAmountString
+            getNumPlayers state
+
+            
+    let playFarkle (state: State) : State =
+        getNumPlayers state
 
     let changeSettings (state: State) : State =
             settingsMenu state
@@ -62,7 +85,7 @@ module Program =
         | _, 2 -> changeSettings state |> mainMenu 
         | _, 3 -> Environment.Exit 0
         | _ ->
-            printfn "That was an invalid choice"
+            printfn "%s" errorInvalidInputString
             mainMenu state
    
     [<EntryPoint>]
@@ -85,10 +108,4 @@ module Program =
         printfn $"%s{titleString}"
         mainMenu State.Default
         
-//        Player.Default
-//        |> updatePlayerName "Test"
-//        |> updatePlayerScore 100
-//        |> updatePlayer 0 <| State.Default
-//        |> printfn "%A"
-
         0 // return an integer exit code
