@@ -37,3 +37,5 @@ module State =
     let printState (state: State) =
         printfn "%A" state
         state
+    let getCurrentPlayer (state: State) =
+        List.findIndex (fun (x:Player) -> x.turn = true) state.players

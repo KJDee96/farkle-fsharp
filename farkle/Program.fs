@@ -1,7 +1,6 @@
 namespace farkle
 
 open System
-open System.Collections.Generic
 
 module Program =
     open farkle.Die
@@ -61,7 +60,7 @@ module Program =
             |> addPlayer <| state
             |> addPlayers amount (tally + 1)
             
-    let rec getNumPlayers (state: State) =
+    let rec getPlayers (state: State) =
         printfn "%s" amountOfPlayersString
         let _, input = getInput ()
         match input with
@@ -69,14 +68,52 @@ module Program =
             addPlayers input 0 state
         | _ ->
             printfn "%s" errorPlayerAmountString
-            getNumPlayers state
+            getPlayers state
+        
+    let rec turn (state: State) =
+        let currentPlayer = getCurrentPlayer state
 
+        let dice = rollSet state.dice state.amountToRoll
+        let diceCount = getDiceCount dice
+        printfn "%A" dice
+        let tally,hotdice = getScores diceCount 0 0 0 diceCount.Length state
+        
+        match hotdice with
+        | true ->
+            printfn "Score: %A HotDice: %A" tally hotdice
             
+            updatePlayerScore tally state.players.[currentPlayer]
+            |> updatePlayer currentPlayer <| state
+            |> turn
+            
+        | false -> 
+            printfn "Score: %A HotDice: %A" tally hotdice
+            
+            let newState = updatePlayerScore tally state.players.[currentPlayer]
+                           |> updatePlayerTurn false
+                           |> updatePlayer currentPlayer <| state
+            
+            
+            let player = List.tryItem (currentPlayer + 1) newState.players
+            match player with
+            | Some _ ->
+                updatePlayerTurn true newState.players.[currentPlayer + 1]
+                |> updatePlayer (currentPlayer + 1) <| newState
+                |> turn
+            | None ->
+                updatePlayerTurn true newState.players.[0]
+                |> updatePlayer 0 <| newState
+                |> turn
+                
     let playFarkle (state: State) : State =
-        getNumPlayers state
+        let stateWithPlayer = state |> getPlayers
+        
+        updatePlayerTurn true stateWithPlayer.players.[0]
+        |> updatePlayer 0 <| stateWithPlayer
+        |> turn
 
     let changeSettings (state: State) : State =
-            settingsMenu state
+        settingsMenu state
     
     let rec mainMenu state =
         printfn "%s" menuString
@@ -90,13 +127,11 @@ module Program =
    
     [<EntryPoint>]
     let main argv =
-//        let initState = State.Default
+        let initState = State.Default
 //        printfn "%A" initState
-//        
-//        let dice = rollSet initState.dice 5
-//        let score = sumDice dice
-//        
+
 //        printfn "%A" dice
+//        printfn "%A" diceCount
 //        printfn "%i" score
 //        
 //        let allDice = getAllDice
@@ -105,6 +140,10 @@ module Program =
 //        printDiceChoice allDice
 //        printfn "%A" updatedState
         
+//        updatePlayerTurn true initState.players.[0]
+//        |> updatePlayer 0 <| initState
+//        |> getCurrentPlayer
+//        |> printfn "%A"
         printfn $"%s{titleString}"
         mainMenu State.Default
         

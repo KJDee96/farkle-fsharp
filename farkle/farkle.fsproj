@@ -8,9 +8,9 @@
 
     <ItemGroup>
         <Compile Include="Die.fs" />
-        <Compile Include="Score.fs" />
         <Compile Include="Player.fs" />
         <Compile Include="State.fs" />
+        <Compile Include="Score.fs" />
         <Compile Include="Strings.fs" />
         <Compile Include="Program.fs" />
     </ItemGroup>
