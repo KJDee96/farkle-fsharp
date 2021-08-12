@@ -16,3 +16,5 @@ module Player =
     let updatePlayerScore (score: int) (player: Player) = {player with score = score}
     
     let updatePlayerTurn (turn: bool) (player: Player) = {player with turn = turn}
+    
+    

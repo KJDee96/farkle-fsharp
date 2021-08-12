@@ -42,6 +42,7 @@ module Score =
             | 5 -> count * (Score.SingleFive |> int), count
             | _ -> Score.Zero |> int, 0
                     
+    // getScores -> tally, hotDice <bool>
     let rec getScores (amountPerDice: (int*int) List) (i: int) (tally: int) (diceScored: int) (length: int) (state: State) =
         match i with
         | i when i = length ->

@@ -7,11 +7,13 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <Compile Include="Strings.fs" />
         <Compile Include="Die.fs" />
         <Compile Include="Player.fs" />
         <Compile Include="State.fs" />
         <Compile Include="Score.fs" />
-        <Compile Include="Strings.fs" />
+        <Compile Include="Turn.fs" />
+        <Compile Include="MainMenu.fs" />
         <Compile Include="Program.fs" />
     </ItemGroup>
 
