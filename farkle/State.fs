@@ -12,7 +12,7 @@ module State =
         static member Default =
             { dice = Die.D6
               amountToRoll = 5
-              players = [Player.Default] }
+              players = [] }
 
 //    let updatePlayerScore (state: State) (playerIndex: int) = { state with players =  }
     

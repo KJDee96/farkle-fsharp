@@ -25,3 +25,5 @@ module Strings =
     let amountOfPlayersString = "\nEnter the amount of players (2+)"
     
     let enterPlayerNameString = "\nEnter player name"
+    
+    let pressEnterString = "Press enter to continue"

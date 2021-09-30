@@ -76,7 +76,8 @@ module MainMenu =
         printfn "%s" menuString
         match getInput () with
         | _, 1 ->
-            let stateWithPlayer = state |> getPlayers        
+            let stateWithPlayer = state |> getPlayers
+            
             updatePlayerTurn true stateWithPlayer.players.[0]
             |> updatePlayer 0 <| stateWithPlayer
             |> playFarkle
